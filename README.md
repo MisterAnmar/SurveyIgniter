@@ -1,5 +1,5 @@
 # SurveyIgniter
-Simple survey app using Codeigniter4.0.2.
+Simple survey app using Codeigniter 4.
 
 # Objective:
 - Using this survey app to learn more about the new awesome codeigniter4.0.2.
@@ -11,7 +11,7 @@ Simple survey app using Codeigniter4.0.2.
 - v0.2.0 - 21-March-2020
 
 # Notes and Credit
-- SurveyIgniter uses [Marks CSS Framework](https://mblode.github.io/marx/) a classless css framework by [Matthew Blode](https://github.com/mblode) which is great for prototyping when you want to focus on the system backend yet have some how presentable UI wih out worring much about the UI design from the start.
+- **SurveyIgniter** uses [Marks CSS Framework](https://mblode.github.io/marx/) a classless css framework by [Matthew Blode](https://github.com/mblode) which is great for prototyping when you want to focus on the system backend yet have some how presentable UI wih out worring much about the UI design from the start.
 
 # TODO:
 
