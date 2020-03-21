@@ -10,6 +10,9 @@ Simple survey app using Codeigniter4.0.2.
 # Current Version
 - v0.2.0 - 21-March-2020
 
+# Notes and Credit
+- SurveyIgniter uses [Marks CSS Framework](https://mblode.github.io/marx/) a classless css framework by [Matthew Blode](https://github.com/mblode) which is great for prototyping when you want to focus on the system backend yet have some how presentable UI wih out worring much about the UI design from the start.
+
 # TODO:
 
 Phase One:
@@ -35,13 +38,16 @@ Phase Four
 - Add report and statistics module (KIS) (Considering a JS library)
 - can be version 0.6.0
 
-
 Phase Five 
 - email list Module
 - Send survey through email based on email list
 - can be version 0.7.0
 
 - start adding the little things, small features, little enhancement (Which never ends) 
+
+
+# CREDIT
+
 
 
 # I would love to hear your comments on improvment. Im just learning.
