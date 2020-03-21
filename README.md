@@ -2,11 +2,11 @@
 Simple survey app using Codeigniter4.0.2.
 
 # Objective:
-- Using this survey app to learn more about the new awesome codeigniter4.0.2
+Using this survey app to learn more about the new awesome codeigniter4.0.2
 So please do comment on the code and on how to improve it (Any suggestions is highly appreciated)
 
 # Current Version
-v0.3.0 - 21-March-2020
+- v0.3.0 - 21-March-2020
 
 # TODO:
 Phase One:
@@ -21,6 +21,12 @@ Phase Three:
 - Port the app to handle accounts subscription
 - Add report and statistics module
 
- Phase Four
-  email list Module
-  Send survey through email based on email list
+Phase Four
+- email list Module
+- Send survey through email based on email list
+
+
+I would love to hear your comments on improvment. Im just learning.
+
+
+
