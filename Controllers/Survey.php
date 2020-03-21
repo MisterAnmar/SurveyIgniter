@@ -9,7 +9,7 @@ use App\Models\QuestionModel;
 /*
 *  Notes for reader
 - All validations are handled in the models
-- Avoided using any helpers in the view (Simple Pure HTML5) (Sometimes just confuses me :-) ) 
+- Avoided using any helpers in the view (Simple Pure HTML5) (Sometimes just confuses me :-) )
 - Please do Comment on the code so i would learn from you
 */
 
@@ -20,7 +20,6 @@ class Survey extends BaseController
 // Works as a handler for any data that will be sent to view
 public $data = [];
 
-	
 public function __construct()
 {
 	// load sample session for testing purposes
@@ -144,7 +143,7 @@ public function affix($surID = null)
 /********************************************************
 *
 *		To Be tested and added
-*	Anything Bellow is either not tested or not 
+*	Anything Bellow is either not tested or not
 *	completed or its just a consideration
 *
 ********************************************************/
@@ -196,7 +195,6 @@ public function validateToken($token = null)
 		}else {
 			echo 'valid';
 		}
-
 }
 //--------------------------------------------------------------------
 /**
@@ -207,7 +205,5 @@ public function initiateToken()
 	$token = sha1(uniqid('', true));
 	echo $token;
 }
-
-
 
 }

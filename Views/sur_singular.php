@@ -4,6 +4,10 @@
 	<section id="content">
 	  <main>
 			<h2>Survey</h2>
+			<div class="status">
+				<?=session('status')?>
+				<?=session()->remove('status')?>
+			</div>
 			<nav>
 				<a href="<?=base_url('survey/revamp/'.$sur['id'])?>">Edit</a>
 				<a href="<?=base_url('survey/affix/'.$sur['id'])?>">Add Questions</a>
@@ -27,50 +31,5 @@
 			?>
 	  </main>
 	</section>
-<script type="text/javascript">
-
-function editContent(btn)
-{
-	var x = document.getElementById("surv-title");
-	if (x.contentEditable == "true") {
-		x.contentEditable = "false";
-		btn.innerHTML = "Edit";
-		var titleText = x.innerText;
-		var survID = document.getElementById("title-btn").value;
-		console.log(titleText);
-		console.log(survID);
-		x.classList.toggle("visible");
-		// DO ajax call
-		doFetch(titleText, survID);
-	} else {
-		x.contentEditable = "true";
-		btn.innerHTML = "Done";
-		x.classList.toggle("visible");
-	}
-}
-
-// Ajax handler function
-function doFetch(textData, survID)
-{
-	const editData = {
-		title: textData,
-		id: survID
-	};
-
-const options = {
-    method: 'POST',
-    body: JSON.stringify(editData),
-		headers: {
-			"Content-Type": "application/json",
-			"X-Requested-With": "XMLHttpRequest"
-		}
-}
-
-fetch('<?=base_url('survey/commit')?>', options)
-    .then(res => res.text())
-    .then(res => console.log(res));
-}
-
-</script>
 
 <?= $this->endSection() ?>
