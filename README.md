@@ -46,10 +46,6 @@ Phase Five
 - start adding the little things, small features, little enhancement (Which never ends) 
 
 
-# CREDIT
-
-
-
 # I would love to hear your comments on improvment. Im just learning.
 
 
