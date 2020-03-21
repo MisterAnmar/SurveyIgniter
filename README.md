@@ -10,7 +10,7 @@ So please do comment on the code and on how to improve it (Any suggestions is hi
 
 # TODO:
 Phase One:
-DONE - basic prototype survey system with minimum features
+- DONE basic prototype survey system with minimum features
 
 Phase Two:
 - Integrate JQuery or Vanilla Javascript to handle adding questions and answers 
