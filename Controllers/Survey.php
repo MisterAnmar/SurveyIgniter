@@ -143,7 +143,9 @@ public function affix($surID = null)
 }
 /********************************************************
 *
-*			To Be tested and added
+*		To Be tested and added
+*	Anything Bellow is either not tested or not 
+*	completed or its just a consideration
 *
 ********************************************************/
 
