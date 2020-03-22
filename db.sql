@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS `question` (
   `user_id` bigint(20) unsigned NOT NULL,
   `survey_id` bigint(20) unsigned NOT NULL,
   `question` varchar(250) NOT NULL,
-  `type` enum('textarea','radio','select') NOT NULL DEFAULT 'textarea',
+  `type` enum('textarea','radio','checkbox') NOT NULL DEFAULT 'textarea',
   `created_at` datetime NOT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
