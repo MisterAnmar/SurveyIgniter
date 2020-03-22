@@ -8,12 +8,13 @@ Simple survey app using Codeigniter 4.
 - So please do comment on the code and on how to improve it (Any suggestions is highly appreciated)
 
 # Current Version
-- v0.2.0 - 21-March-2020
+- [v0.2.0](https://github.com/anmar-dev/SurveyIgniter/releases/tag/v0.2.0-alpha) - 21-March-2020
 
 # Notes and Credit
 - **SurveyIgniter** uses [Marks CSS Framework](https://mblode.github.io/marx/) a classless css framework by [Matthew Blode](https://github.com/mblode) which is great for prototyping when you want to focus on the system backend yet have some how presentable UI wih out worring much about the UI design from the start.
 
 # TODO:
+Please check out the project tab for details
 
 **Phase One:**
 - **DONE** basic prototype survey system with minimum features
