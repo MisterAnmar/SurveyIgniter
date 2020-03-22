@@ -14,10 +14,6 @@
 			font-family: NewsGothicBT-Light,Helvetica,Arial,sans-serif;
 			color: #000;
 		}
-
-		.visible{
-			border-bottom: 1px solid #ccc;
-		}
 	</style>
 </head>
 <body>
