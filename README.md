@@ -2,16 +2,19 @@
 Simple survey app using Codeigniter 4.
 
 # Objective:
+- 
+- Design and Build a basic yet adequate survey web application from start to finish.
 - Using this survey app to learn more about the new awesome codeigniter4.0.2.
-- Trying to follow KIS Method KEEP IT SIMPLE
-- Learn more about Github
-- So please do comment on the code and on how to improve it (Any suggestions is highly appreciated)
+- Trying to follow KIS Method KEEP IT SIMPLE yet follow CodeIgniter4 best practice
+- Learn more about Github and related tools (Editors, Command line, versioning, .etc)
+- You are welcome to join 
+- Do comment on the code and on how to improve it (Any suggestions is highly appreciated).
 
-# Current Version
-- [v0.2.0](https://github.com/anmar-dev/SurveyIgniter/releases/tag/v0.2.0-alpha) - 21-March-2020
+# Release
+- [v0.2.0-Alpha](https://github.com/anmar-dev/SurveyIgniter/releases/tag/v0.2.0-alpha) - 21-March-2020
 
 # TODO:
-Please check out the [project](https://github.com/anmar-dev/SurveyIgniter/projects) section for details
+Check out the [project](https://github.com/anmar-dev/SurveyIgniter/projects) section for details
 
 **Phase One:**
 - **DONE** basic prototype survey system with minimum features
@@ -40,13 +43,14 @@ Please check out the [project](https://github.com/anmar-dev/SurveyIgniter/projec
 - email list Module
 - Send survey through email based on email list
 - can be version 0.7.0
-
-- start adding the little things, small features, little enhancement (Which never ends) 
+------
+- start adding the little things, small features, little enhancement (Which never ends). 
 
 
 # I would love to hear your comments on improvment. Im just learning.
 
 # Notes and Credit
 - **SurveyIgniter** uses [Marks CSS Framework](https://mblode.github.io/marx/) a classless css framework by [Matthew Blode](https://github.com/mblode) which is great for prototyping when you want to focus on the system backend yet have some how presentable UI wih out worring much about the UI design from the start.
+- **SurveyIgniter** uses JQuery 3.4 as the main Client side scripting library (So far). Suggestions are welcomed.
 
 
