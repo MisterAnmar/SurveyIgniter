@@ -1,6 +1,8 @@
 # SurveyIgniter
 Simple yet adequate :-) survey app using Codeigniter 4.
 
+
+
 # Objective:
 
 - Design and Build a basic yet adequate survey web application from start to finish.
@@ -10,8 +12,12 @@ Simple yet adequate :-) survey app using Codeigniter 4.
 - You are welcome to join 
 - Do comment on the code and on how to improve it (Any suggestions is highly appreciated).
 
+
+
 # Release
 - [v0.2.0-Alpha](https://github.com/anmar-dev/SurveyIgniter/releases/tag/v0.2.0-alpha) - 21-March-2020
+
+
 
 # TODO:
 Check out the [project](https://github.com/anmar-dev/SurveyIgniter/projects) section for details
@@ -43,11 +49,12 @@ Check out the [project](https://github.com/anmar-dev/SurveyIgniter/projects) sec
 - email list Module
 - Send survey through email based on email list
 - can be version 0.7.0
-------
+
+**Phase n:**
 - start adding the little things, small features, little enhancement (Which never ends). 
+------
 
-
-# I would love to hear your comments on improvment. Im just learning.
+I would love to hear your comments on improvment. Im just learning.
 
 # Notes and Credit
 - **SurveyIgniter** uses [Marks CSS Framework](https://mblode.github.io/marx/) a classless css framework by [Matthew Blode](https://github.com/mblode) which is great for prototyping when you want to focus on the system backend yet have some how presentable UI wih out worring much about the UI design from the start.
