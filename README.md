@@ -1,8 +1,8 @@
 # SurveyIgniter
-Simple survey app using Codeigniter 4.
+Simple yet adequate :-) survey app using Codeigniter 4.
 
 # Objective:
-- 
+
 - Design and Build a basic yet adequate survey web application from start to finish.
 - Using this survey app to learn more about the new awesome codeigniter4.0.2.
 - Trying to follow KIS Method KEEP IT SIMPLE yet follow CodeIgniter4 best practice
