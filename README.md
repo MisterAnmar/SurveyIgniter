@@ -15,7 +15,7 @@ Simple yet adequate :-) survey app using Codeigniter 4.
 
 
 # Release
-- [v0.2.0-Alpha](https://github.com/anmar-dev/SurveyIgniter/releases/tag/v0.2.0-alpha) - 21-March-2020
+- [v0.2.0-Pre-Alpha](https://github.com/anmar-dev/SurveyIgniter/releases/tag/v0.2.0-alpha) Just testing - 21-March-2020
 
 
 
