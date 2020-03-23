@@ -59,5 +59,5 @@ I would love to hear your comments on improvment. Im just learning.
 # Notes and Credit
 - **SurveyIgniter** uses [Marks CSS Framework](https://mblode.github.io/marx/) a classless css framework by [Matthew Blode](https://github.com/mblode) which is great for prototyping when you want to focus on the system backend yet have some how presentable UI wih out worring much about the UI design from the start.
 - **SurveyIgniter** uses JQuery 3.4 as the main Client side scripting library (So far). Suggestions are welcomed.
-
+- **Inspired** by the tutorial of [KhoPhi](https://blog.khophi.co/10-days-laravel-5-laravel-survey-app/)
 
