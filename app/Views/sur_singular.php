@@ -3,33 +3,45 @@
 
 	<section id="content">
 	  <main>
-			<h2>Survey</h2>
-			<div class="status">
-				<?=session('status')?>
-				<?=session()->remove('status')?>
-			</div>
-			<nav>
-				<a href="<?=base_url('survey/revamp/'.$sur['id'])?>">Edit</a>
-				<a href="<?=base_url('survey/affix/'.$sur['id'])?>">Add Questions</a>
-			</nav>
 			<?php
 			if (isset($sur)) {
 				echo '<h2>'.$sur['title'].'</h2>';
+				echo '<a href="'.base_url('survey/revamp/'.$sur['id']).'">Edit</a>
+							<a href="'.base_url('survey/affix/'.$sur['id']).'">Add Questions</a>';
+				echo '<br>';
 				echo '<p>'.$sur['description'].'</p>';
-			}else {
-				echo 'No such Survey!';
 			}
 
 			if (isset($ques) && is_array($ques)) {
-				foreach ($ques as $que) {
-					// Display Based on type
-					echo '<p>'.$que['title'].'</p>';
-				}
+				echo '<hr>';
+				$i = 1;
+					foreach ($ques as $que) {
+						echo '<p>'.$i.' - '.$que['question'].'</p>';
+						if ($que['type'] == 'textarea') {
+									echo '<textarea name="'.$que['id'].'" id="" cols="30" rows="5"></textarea>';
+									echo '<br>';
+						}
+						elseif ($que['type'] == 'radio') {
+							foreach($opts as $opt){
+								  echo '<input name="question_'.$que['id'].'" type="radio" id="q'.$que['id'].'_o'.$opt['id'].'" />';
+									echo $opt['option'];
+									echo '<br>';
+									}
+
+						}
+						elseif ($que['type'] == 'select') {
+							// code...
+						}
+						$i++;
+					}
 			}else {
 				echo 'No Questions Yet.';
 			}
 			?>
 	  </main>
 	</section>
+<script type="text/javascript">
+
+</script>
 
 <?= $this->endSection() ?>
