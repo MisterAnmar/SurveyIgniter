@@ -2,6 +2,11 @@
 Simple yet adequate :-) survey app using Codeigniter 4.
 
 
+# This Release Branch 
+
+This release branch is the planned coming release v0.3.5-Alpha
+Please refer to Issues section and project section for details
+
 
 # Objective:
 
