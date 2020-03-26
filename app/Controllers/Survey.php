@@ -54,11 +54,8 @@ class Survey extends BaseController
 	public function create()
 	{
 		if ($this->request->getMethod() === 'post') {
-
 			$surModel = new SurveyModel();
-
 			$saveData = array_merge(['user_id' => session('user.user_id')], $this->request->getPost());
-
 			if ($surModel->save($saveData)) {
 				session()->set('status', 'New Survey Added.');
 				return redirect()->to('/survey/fetch/'.$surModel->insertID());
@@ -67,7 +64,6 @@ class Survey extends BaseController
 			session()->set('errors', $surModel->errors());
 			return redirect()->back()->withInput();
 		}
-
 		return view('sur_create', $this->data);
 	}
 	//--------------------------------------------------------------------
@@ -130,6 +126,31 @@ class Survey extends BaseController
 		return view('sur_plural', $this->data);
 	}
 //--------------------------------------------------------------------
+
+
+public function deb()
+{
+	if ($this->request->isAjax()) {
+		$json = $this->request->getJSON();
+
+		$dataArray = json_decode(json_encode($json), true);
+
+
+
+
+		$this->data['data'] = $dataArray;
+		$this->data['message'] = "Ajax request";
+		return json_encode($this->data);
+	}
+
+	$this->data['message'] = "Not an Ajax request";
+	return json_encode($this->data);
+}
+
+
+
+
+//--------------------------------------------------------------------
 /**
 	*
 	*/
@@ -140,54 +161,95 @@ class Survey extends BaseController
 		}
 		$surModel = new SurveyModel();
 		$queModel = new QuestionModel();
+		$optModel = new OptionModel();
 
 		if (!$this->data['sur'] = $surModel->where('user_id', session('user.user_id'))->where('id', $surID)->first()) {
 			throw new PageNotFoundException("Cannot Processe your Request");
 		}
 
 		$this->data['ques'] = $queModel->where('survey_id', $surID)->findAll();
+		// $this->data['opts'] = $optModel->where('survey_id', $surID)->findAll();
+		$this->data['count'] = count($this->data['ques']);
 
+		//return view('sur_affixjs', $this->data);
 		return view('sur_affix', $this->data);
 	}
-/********************************************************
-*
-*			To Be tested and added
-*
-********************************************************/
-// TODO: test and edit
 //--------------------------------------------------------------------
 /**
 	*
 	*/
 	public function affixq()
 	{
-		if ($this->request->isAjax()) {
-				$queModel = new QuestionModel();
-				// TODO: Check itegrity of user and survey
-				// TODO: Design a way to check validity of each question and answer options
-				var_dump($this->request->getPost());
-				return;
-		}
-		echo 'No Ajax';
-		return;
-
-		//return json_encode($this->data);
-	}
-
-//--------------------------------------------------------------------
-/**
-	 * Load main view page (System Starting point)
-	 */
-public function commit()
-{
 	if ($this->request->isAjax()) {
-			// $json = $this->request->getJSON();
-			// var_dump($json);
-			// $myArray = json_decode(json_encode($json), true);
-			// var_dump($myArray);
-			echo "OK";
+			$this->data['formD'] = $this->request->getPost();
+			$surID = $this->request->getPost('surID');
+			if (! $this->validate([
+			        'surID' 				=> "required|numeric|is_not_unique[survey.id,id,{$surID}]",
+							'question'  		=> 'required|alpha_numeric_punct',
+							'questionType'  => 'required|in_list[radio,checkbox,texarea]',
+			    ])){
+						$this->data['status'] = false;
+						$this->data['errors'] = $this->validator->getErrors();
+						$this->data['message'] = "Problem with validation.";
+						return json_encode($this->data);
+					}
+			// First level validation Done
+			// Load models
+			$surModel = new SurveyModel();
+			$queModel = new QuestionModel();
+			$optModel = new OptionModel();
+			// Check integrity
+			if (!$this->data['sur'] = $surModel->where('user_id', session('user.user_id'))->where('id', $surID)->first()) {
+				$this->data['status'] = false;
+				$this->data['errors'] = $surModel->errors();
+				$this->data['message'] = "Problem with integrity";
+				return json_encode($this->data);
+			}
+			// Prepare data
+			$questionData = [
+				'user_id' => session('user.user_id'),
+				'survey_id' => $surID,
+				'question' => $this->request->getPost('question'),
+				'type' => $this->request->getPost('questionType'),
+			];
+			if (!$queModel->save($questionData)) {
+				$this->data['status'] = false;
+				$this->data['errors'] = $queModel->errors();
+				$this->data['message'] = "Problem with adding question.";
+				return json_encode($this->data);
+			}
+			$queID = $queModel->insertID();
+			$options = $this->request->getPost('option');
+			foreach ($options as $option) {
+					$optionsData = [
+						'user_id' => session('user.user_id'),
+						'survey_id' => $surID,
+						'question_id' => $queID,
+						'option' => $option
+					];
+					$optModel->save($optionsData);
+					unset($optionsData);
+				}
+
+			unset($this->data);
+
+			sleep(3);
+			$this->data['status'] = true;
+			$this->data['message'] = 'Question with Options added successfully.';
+			return json_encode($this->data);
+		}
+		$this->data['status'] = false;
+		$this->data['message'] = "Its not ajax request.";
+		return json_encode($this->data);
 	}
-}
+//--------------------------------------------------------------------
+
+/********************************************************
+*
+*			To Be tested and added
+*
+********************************************************/
+// TODO: test and edit
 
 //--------------------------------------------------------------------
 /**
@@ -200,7 +262,6 @@ public function commit()
 			}else {
 				echo 'valid';
 			}
-
 	}
 //--------------------------------------------------------------------
 /**
@@ -211,7 +272,5 @@ public function commit()
 		$token = sha1(uniqid('', true));
 		echo $token;
 	}
-
-
 
 }
