@@ -16,23 +16,28 @@
 				echo '<hr>';
 				$i = 1;
 					foreach ($ques as $que) {
+						echo '<div class="question-block">';
+						echo '<div class="question">';
 						echo '<p>'.$i.' - '.$que['question'].'</p>';
+						echo '</div>';
 						if ($que['type'] == 'textarea') {
-									echo '<textarea name="'.$que['id'].'" id="" cols="30" rows="5"></textarea>';
-									echo '<br>';
-						}
-						elseif ($que['type'] == 'radio') {
+								echo '<div class="options">';
+								echo '<p>Text Box</p>';
+								echo '</div>';
+						}	else {
+								echo '<div class="options">';
+								echo '<ol type="a">';
 							foreach($opts as $opt){
-								  echo '<input name="question_'.$que['id'].'" type="radio" id="q'.$que['id'].'_o'.$opt['id'].'" />';
+									//echo '<input name="question_'.$que['id'].'" type="radio" id="q'.$que['id'].'_o'.$opt['id'].'" />';
+									echo '<li>';
 									echo $opt['option'];
-									echo '<br>';
+									echo '</li>';
 									}
-
-						}
-						elseif ($que['type'] == 'select') {
-							// code...
+								echo '</ol>';
+								echo '</div>';
 						}
 						$i++;
+						echo '</div>';
 					}
 			}else {
 				echo 'No Questions Yet.';
@@ -40,6 +45,8 @@
 			?>
 	  </main>
 	</section>
+
+
 <script type="text/javascript">
 
 </script>

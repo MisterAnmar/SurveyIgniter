@@ -126,31 +126,6 @@ class Survey extends BaseController
 		return view('sur_plural', $this->data);
 	}
 //--------------------------------------------------------------------
-
-
-public function deb()
-{
-	if ($this->request->isAjax()) {
-		$json = $this->request->getJSON();
-
-		$dataArray = json_decode(json_encode($json), true);
-
-
-
-
-		$this->data['data'] = $dataArray;
-		$this->data['message'] = "Ajax request";
-		return json_encode($this->data);
-	}
-
-	$this->data['message'] = "Not an Ajax request";
-	return json_encode($this->data);
-}
-
-
-
-
-//--------------------------------------------------------------------
 /**
 	*
 	*/
@@ -242,14 +217,64 @@ public function deb()
 		$this->data['message'] = "Its not ajax request.";
 		return json_encode($this->data);
 	}
-//--------------------------------------------------------------------
+	//--------------------------------------------------------------------
+	/**
+		*
+		*/
+	public function detach()
+	{
+		if ($this->request->isAjax()) {
+			// code...
+			$surID = $this->request->getPost('surID');
+			$qID 	 = $this->request->getPost('queID');
 
+			if ($this->request->getPost('questionID')) {
+				// Load Model
+				$surModel = new SurveyModel();
+				$queModel = new QuestionModel();
+				$optModel = new OptionModel();
+
+				// Check Integrity
+				if ($surModel->where('id', $surID)->where('user_id', session('user.user_id'))->first()) {
+					// delete options then question
+					if($optionModel->where('question_id', $qID)->where('user_id', session('user.user_id'))->delete()){
+							if($queModel->where('id', $qID)->where('user_id', session('user.user_id'))->delete()){
+									$this->data['status'] = true;
+									$this->data['message'] = "Question and options deleted successfully.";
+									return json_encode($this->data);
+							}
+					}
+				}
+				$this->data['status'] = false;
+				$this->data['message'] = "Problem with deleting question.";
+				return json_encode($this->data);
+			}
+
+		}
+		$this->data['status']  = false;
+		$this->data['message'] = "Not a proper request";
+		return json_encode($this->data);
+	}
+
+	//--------------------------------------------------------------------
+	/**
+		*
+		*/
+	public function remove()
+	{
+		if ($this->request->isAjax()) {
+			// Check if questions and option deleted
+			// a better way to add database constrains
+
+		}
+	}
 /********************************************************
 *
 *			To Be tested and added
 *
 ********************************************************/
 // TODO: test and edit
+
 
 //--------------------------------------------------------------------
 /**
