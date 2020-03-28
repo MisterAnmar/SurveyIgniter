@@ -17,6 +17,7 @@
 				$i = 1;
 					foreach ($ques as $que) {
 						echo '<div class="question-block">';
+						echo '<button type="button" value="'.$sur['id'].','.$que['id'].'" class="question-remove">Delete</button>';
 						echo '<div class="question">';
 						echo '<p>'.$i.' - '.$que['question'].'</p>';
 						echo '</div>';
@@ -48,6 +49,34 @@
 
 
 <script type="text/javascript">
+
+$(function(){
+
+	$(".question-remove").on("click", function(event){
+		event.preventDefault();
+		var record = $(this).val();
+		if (window.confirm("Do you really want to delete this question?")) {
+			var formData = {record: record };
+
+			$.post( "<?=base_url('survey/detach')?>", formData, function(result) {
+			}, "json")
+			.done(function(result){
+				if (result.status) {
+					alert(result.message);
+					$(this).closest('.question-block').remove();
+				}else {
+					alert(result.message + " - " + result.errors);
+				}
+			})
+			.fail(function(result) {
+				console.log("fail");
+			});
+		}else{
+			return;
+		}
+	});
+
+});
 
 </script>
 

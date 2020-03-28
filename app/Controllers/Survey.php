@@ -225,10 +225,13 @@ class Survey extends BaseController
 	{
 		if ($this->request->isAjax()) {
 			// code...
-			$surID = $this->request->getPost('surID');
-			$qID 	 = $this->request->getPost('queID');
+			$record = $this->request->getPost('record');
 
-			if ($this->request->getPost('questionID')) {
+			$splitIDs = explode(',', $record);
+			$surID = $splitIDs[0];
+			$queID = $splitIDs[1];
+
+			if ($queID) {
 				// Load Model
 				$surModel = new SurveyModel();
 				$queModel = new QuestionModel();
@@ -237,8 +240,8 @@ class Survey extends BaseController
 				// Check Integrity
 				if ($surModel->where('id', $surID)->where('user_id', session('user.user_id'))->first()) {
 					// delete options then question
-					if($optionModel->where('question_id', $qID)->where('user_id', session('user.user_id'))->delete()){
-							if($queModel->where('id', $qID)->where('user_id', session('user.user_id'))->delete()){
+					if($optModel->where('question_id', $queID)->where('user_id', session('user.user_id'))->delete()){
+							if($queModel->where('id', $queID)->where('user_id', session('user.user_id'))->delete()){
 									$this->data['status'] = true;
 									$this->data['message'] = "Question and options deleted successfully.";
 									return json_encode($this->data);
