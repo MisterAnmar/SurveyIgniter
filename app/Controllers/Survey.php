@@ -35,9 +35,9 @@ private $oModel;
 			// load sample session for testing purposes
 			$userData = [
 				'user' => [
-					'user_id' => 10,
+					'user_id' => '1',
 					'logged_in' => true,
-					'group' => ['standard', 'example2', 'example3'],
+					'group' => ['standard'],
 				],
 				'setting' =>[
 					'time_zone' => 'Something'
@@ -52,7 +52,7 @@ private $oModel;
   public function index()
 	{
 
-		$this->data['surs'] = $this->sModel->where('user_id', session('user.user_id'))->findAll();
+		$this->data['surveys'] = $this->sModel->where('user_id', session('user.user_id'))->findAll();
 		return view('sur_main', $this->data);
 	}
 //--------------------------------------------------------------------
@@ -64,7 +64,7 @@ private $oModel;
 		if ($this->request->getMethod() === 'post') {
 
 			$sData = array_merge(['user_id' => session('user.user_id')], $this->request->getPost());
-			if ($this->sModel->save($sData)) {
+			if ($this->sModel->insert($sData)) {
 				session()->setFlashdata('status', 'New survey added.');
 				return redirect()->to('/');
 			}
@@ -81,7 +81,7 @@ private $oModel;
 	*/
 	public function revamp(int $sId = null)
 	{
-		if (is_null($surID)) {
+		if (is_null($sId)) {
 			throw new PageNotFoundException("Does not exist!");
 		}
 		if ($this->request->getMethod() === 'post') {
@@ -110,7 +110,7 @@ private $oModel;
 	}
 	//--------------------------------------------------------------------
 	/**
-		* Get survey if ID is set otherwise gell all surveys
+		* Get survey if ID is set otherwise get all surveys
 		*/
 		public function fetch(int $sId = null)
 		{
@@ -168,7 +168,7 @@ public function affixQ()
 			$questionData = [
 				'user_id' 	=> session('user.user_id'),
 				'survey_id' => $sId,
-				'question' 	=> $this->request->getPost('question'),
+				'content' 	=> $this->request->getPost('content'),
 				'type' 			=> $this->request->getPost('questionType'),
 			];
 			// Save question data
@@ -216,13 +216,26 @@ public function detachQ()
 	if ($this->request->isAjax()) {
 
 		if ($this->request->getMethod() === 'post') {
-			$this->qModel->where('id', $this->request->getPost('gId'))->where('user_id', session('user.user_id'))->delete();
+			if ($this->qModel->where('id', $this->request->getPost('gId'))->where('user_id', session('user.user_id'))->delete()) {
 				if($this->qModel->affectedRows() !== 0){
 					$this->data['code'] = 100;
 					$this->data['status'] = "Record deleted.";
 					return json_encode($this->data);
+				}
+				$this->data['code'] 	= 110;
+				$this->data['errors'] = $this->qModel->errors();
+				$this->data['status'] = 'affected Rows problem';
+				return json_encode($this->data);
 			}
+
+			$this->data['code'] 	= 110;
+			$this->data['errors'] = $this->qModel->errors();
+			$this->data['status'] = 'Model problem';
+			return json_encode($this->data);
 		}
+		$this->data['code'] 	= 110;
+		$this->data['status'] = 'Post issue.';
+		return json_encode($this->data);
 	}
 	// Respond with fail status
 	$this->data['code'] 	= 110;
