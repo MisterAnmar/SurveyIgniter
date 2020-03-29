@@ -20,8 +20,8 @@ class OptionModel extends Model
         protected $validationRules    = [
               'user_id'     => 'required|is_natural_no_zero',
               'survey_id'   => 'required|is_natural_no_zero',
-              'option_id'   => 'required|is_natural_no_zero',
-              'question'    => 'required|alpha_numeric_punct|min_length[3]'
+              'question_id' => 'required|is_natural_no_zero',
+              'option'      => 'required|min_length[3]'
         ];
         protected $validationMessages = [];
         protected $skipValidation     = false;

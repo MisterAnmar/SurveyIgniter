@@ -14,15 +14,24 @@ use App\Models\OptionModel;
 	- Please do Comment on the code so i would learn from you
 	*/
 
-	// TODO: Considering adding a method(function) that can handle response data also another one to handle errors and status messages
+	// TODO: Considering adding a method(function) that can handle response data, also another one to handle errors and status messages
 
 class Survey extends BaseController
 {
 
-	public $data = [];
+public $data = [];
+//
+private $sModel;
+private $qModel;
+private $oModel;
 
 	public function __construct()
 	{
+		// Initiate Models Objects
+		$this->sModel = new SurveyModel();
+		$this->qModel = new QuestionModel();
+		$this->oModel = new OptionModel();
+
 			// load sample session for testing purposes
 			$userData = [
 				'user' => [
@@ -40,265 +49,212 @@ class Survey extends BaseController
 /**
 	 * Load main view page (System Starting point)
 	 */
-	public function index()
+  public function index()
 	{
-		$surModel = new SurveyModel();
-		$this->data['surs'] = $surModel->where('user_id', session('user.user_id'))->findAll();
 
+		$this->data['surs'] = $this->sModel->where('user_id', session('user.user_id'))->findAll();
 		return view('sur_main', $this->data);
 	}
 //--------------------------------------------------------------------
 /**
-	*
+	* Load create survey form or process survey form
 	*/
 	public function create()
 	{
 		if ($this->request->getMethod() === 'post') {
-			$surModel = new SurveyModel();
-			$saveData = array_merge(['user_id' => session('user.user_id')], $this->request->getPost());
-			if ($surModel->save($saveData)) {
-				session()->set('status', 'New Survey Added.');
-				return redirect()->to('/survey/fetch/'.$surModel->insertID());
+
+			$sData = array_merge(['user_id' => session('user.user_id')], $this->request->getPost());
+			if ($this->sModel->save($sData)) {
+				session()->setFlashdata('status', 'New survey added.');
+				return redirect()->to('/');
 			}
-			session()->set('status', 'Fail Adding.');
-			session()->set('errors', $surModel->errors());
+				session()->setFlashdata('status', "Unable to add new survey.");
+				session()->setFlashdata('errors', $this->sModel->errors());
+				return redirect()->back()->withInput();
+		}
+
+		return view('sur_create', $this->data);
+	}
+//--------------------------------------------------------------------
+/**
+	* Load edit survey form or process edit survey form
+	*/
+	public function revamp(int $sId = null)
+	{
+		if (is_null($surID)) {
+			throw new PageNotFoundException("Does not exist!");
+		}
+		if ($this->request->getMethod() === 'post') {
+			// Check integrity
+			if (!$this->sModel->where('user_id', session('user.user_id'))->where('id', $this->request->getPost('id'))->first()) {
+				throw new PageNotFoundException("Does not exist!");
+			}
+			// Save data db
+			if ($this->sModel->save($this->request->getPost())) {
+				// Set message and redirect to main page
+				session()->setFlashdata('status', 'Survey updated.');
+				return redirect()->to('/');
+			}
+			session()->setFlashdata('status', "Unable to update survey.");
+			session()->setFlashdata('errors', $this->sModel->errors());
 			return redirect()->back()->withInput();
 		}
-		return view('sur_create', $this->data);
+
+		// Check integrity
+		if (!$this->sModel->where('user_id', session('user.user_id'))->where('id', $sId)->first()) {
+			throw new PageNotFoundException("Does not exist!");
+		}
+		// Get survey data and load edit form
+		$this->data['survey'] = $this->sModel->find($sId);
+		return view('sur_revamp', $this->data);
 	}
 	//--------------------------------------------------------------------
 	/**
-		*
+		* Get survey if ID is set otherwise gell all surveys
 		*/
-	public function revamp($surID = null)
-	{
-
-		if (is_null($surID)) {
-			throw new PageNotFoundException("Does not exist!");
-		}
-
-			$surModel = new SurveyModel();
-
-		if ($this->request->getMethod() === 'post') {
-			// Check integrity
-				if (!$surModel->where('user_id', session('user.user_id'))->where('id', $this->request->getPost('id'))->first()) {
+		public function fetch(int $sId = null)
+		{
+			if (!is_null($sId)) {
+				if (!$this->sModel->where('user_id', session('user.user_id'))->where('id', $sId)->first()) {
 					throw new PageNotFoundException("Does not exist!");
 				}
-				if ($surModel->save($this->request->getPost())) {
-					session()->set('status', 'Survey Updated.');
-					return redirect()->to('/survey/fetch/'.$surID);
-				}
-				session()->set('status', 'Failed updating.');
-				session()->set('errors', $surModel->errors());
-				return redirect()->back()->withInput();
+				$this->data['survey'] 	 = $this->sModel->find($sId);
+				$this->data['questions'] = $this->qModel->where('survey_id', $sId)->findAll();
+				$this->data['options'] 	 = $this->oModel->where('survey_id', $sId)->findAll();
+
+				return view('sur_singular', $this->data);
 			}
 
-			// Check integrity
-		if (!$surModel->where('user_id', session('user.user_id'))->where('id', $surID)->first()) {
-			throw new PageNotFoundException("Does not exist!");
+			$this->data['surveys'] = $this->sModel->where('user_id', session('user.user_id'))->findAll();
+			return view('sur_plural', $this->data);
 		}
-
-			$this->data['sur'] = $surModel->find($surID);
-		return view('sur_revamp', $this->data);
-	}
 //--------------------------------------------------------------------
 /**
-	* Fetch single or all of surveys
+	* Load Survey, questions count, and add question and options form.
 	*/
-	public function fetch($surID = null)
+	public function affix(int $sId = null)
 	{
-		$surModel = new SurveyModel();
-		$queModel = new QuestionModel();
-		$optModel = new OptionModel();
-
-		if (!is_null($surID)) {
-			if (!$surModel->where('user_id', session('user.user_id'))->where('id', $surID)->first()) {
-				throw new PageNotFoundException("Does not exist!");
-			}
-			$this->data['sur'] = $surModel->find($surID);
-			$this->data['ques'] = $queModel->where('survey_id', $surID)->findAll();
-			$this->data['opts'] = $optModel->where('survey_id', $surID)->findAll();
-
-			return view('sur_singular', $this->data);
+		if (is_null($sId)) {
+			throw new PageNotFoundException("Cannot Process your Request");
+		}
+		if (!$this->data['survey'] = $this->sModel->where('user_id', session('user.user_id'))->where('id', $sId)->first()) {
+			throw new PageNotFoundException("Cannot Process your Request");
 		}
 
-		$this->data['surs'] = $surModel->where('user_id', session('user.user_id'))->findAll();
-		return view('sur_plural', $this->data);
-	}
-//--------------------------------------------------------------------
-/**
-	*
-	*/
-	public function affix($surID = null)
-	{
-		if (is_null($surID)) {
-			throw new PageNotFoundException("Cannot Processe your Request");
-		}
-		$surModel = new SurveyModel();
-		$queModel = new QuestionModel();
-		$optModel = new OptionModel();
+		$this->data['questions'] = $this->qModel->where('survey_id', $sId)->findAll();
+		$this->data['count'] = count($this->data['questions']);
 
-		if (!$this->data['sur'] = $surModel->where('user_id', session('user.user_id'))->where('id', $surID)->first()) {
-			throw new PageNotFoundException("Cannot Processe your Request");
-		}
-
-		$this->data['ques'] = $queModel->where('survey_id', $surID)->findAll();
-		// $this->data['opts'] = $optModel->where('survey_id', $surID)->findAll();
-		$this->data['count'] = count($this->data['ques']);
-
-		//return view('sur_affixjs', $this->data);
 		return view('sur_affix', $this->data);
 	}
 //--------------------------------------------------------------------
 /**
-	*
+	* Get ajax calls and process adding questions and options to the DB.
+	* Code: 100 = OK, 110 = fail
 	*/
-	public function affixq()
-	{
-	if ($this->request->isAjax()) {
-			$this->data['formD'] = $this->request->getPost();
-			$surID = $this->request->getPost('surID');
-			if (! $this->validate([
-			        'surID' 				=> "required|numeric|is_not_unique[survey.id,id,{$surID}]",
-							'question'  		=> 'required|alpha_numeric_punct',
-							'questionType'  => 'required|in_list[radio,checkbox,texarea]',
-			    ])){
-						$this->data['status'] = false;
-						$this->data['errors'] = $this->validator->getErrors();
-						$this->data['message'] = "Problem with validation.";
-						return json_encode($this->data);
-					}
-			// First level validation Done
-			// Load models
-			$surModel = new SurveyModel();
-			$queModel = new QuestionModel();
-			$optModel = new OptionModel();
+public function affixQ()
+{
+	if ($this->request->isAjax() && $this->request->getMethod() === 'post') {
+
+			//$data['formD'] = $this->request->getPost();
+			$sId = $this->request->getPost('sId');
 			// Check integrity
-			if (!$this->data['sur'] = $surModel->where('user_id', session('user.user_id'))->where('id', $surID)->first()) {
-				$this->data['status'] = false;
-				$this->data['errors'] = $surModel->errors();
-				$this->data['message'] = "Problem with integrity";
+			if (!$this->sModel->where('user_id', session('user.user_id'))->where('id', $sId)->first()) {
+				$this->data['code'] = 110;
+				$this->data['status'] = 'Cannot process your request';
+				$this->data['errors'] = $this->sModel->errors();
 				return json_encode($this->data);
 			}
 			// Prepare data
 			$questionData = [
-				'user_id' => session('user.user_id'),
-				'survey_id' => $surID,
-				'question' => $this->request->getPost('question'),
-				'type' => $this->request->getPost('questionType'),
+				'user_id' 	=> session('user.user_id'),
+				'survey_id' => $sId,
+				'question' 	=> $this->request->getPost('question'),
+				'type' 			=> $this->request->getPost('questionType'),
 			];
-			if (!$queModel->save($questionData)) {
+			// Save question data
+			if (!$this->qModel->save($questionData)) {
+				$this->data['code'] = 110;
 				$this->data['status'] = false;
-				$this->data['errors'] = $queModel->errors();
-				$this->data['message'] = "Problem with adding question.";
+				$this->data['errors'] = $this->qModel->errors();
 				return json_encode($this->data);
 			}
-			$queID = $queModel->insertID();
+			if ($this->request->getPost('questionType') == 'textarea') {
+				$this->data['code'] = 100;
+				$this->data['status'] = 'Question added.';
+				return json_encode($this->data);
+			}
+			// Prepare Options data
+			$questionId = $this->qModel->insertID();
 			$options = $this->request->getPost('option');
+			// Options are array therefor we use loop to handle insert (Needs improvment though)
 			foreach ($options as $option) {
-					$optionsData = [
+					$optionData = [
 						'user_id' => session('user.user_id'),
-						'survey_id' => $surID,
-						'question_id' => $queID,
+						'survey_id' => $sId,
+						'question_id' => $questionId,
 						'option' => $option
 					];
-					$optModel->save($optionsData);
-					unset($optionsData);
-				}
-
-			unset($this->data);
-
-			sleep(3);
-			$this->data['status'] = true;
-			$this->data['message'] = 'Question with Options added successfully.';
+					// Needs a way to handle errors
+					$this->oModel->save($optionData);
+					unset($optionData);
+			}
+			$this->data['code'] = 100;
+			$this->data['status'] = 'Question with Options added.';
 			return json_encode($this->data);
-		}
-		$this->data['status'] = false;
-		$this->data['message'] = "Its not ajax request.";
-		return json_encode($this->data);
 	}
-	//--------------------------------------------------------------------
-	/**
-		*
-		*/
-	public function detach()
-	{
-		if ($this->request->isAjax()) {
-			// code...
-			$record = $this->request->getPost('record');
-
-			$splitIDs = explode(',', $record);
-			$surID = $splitIDs[0];
-			$queID = $splitIDs[1];
-
-			if ($queID) {
-				// Load Model
-				$surModel = new SurveyModel();
-				$queModel = new QuestionModel();
-				$optModel = new OptionModel();
-
-				// Check Integrity
-				if ($surModel->where('id', $surID)->where('user_id', session('user.user_id'))->first()) {
-					// delete options then question
-					if($optModel->where('question_id', $queID)->where('user_id', session('user.user_id'))->delete()){
-							if($queModel->where('id', $queID)->where('user_id', session('user.user_id'))->delete()){
-									$this->data['status'] = true;
-									$this->data['message'] = "Question and options deleted successfully.";
-									return json_encode($this->data);
-							}
-					}
-				}
-				$this->data['status'] = false;
-				$this->data['message'] = "Problem with deleting question.";
-				return json_encode($this->data);
-			}
-
-		}
-		$this->data['status']  = false;
-		$this->data['message'] = "Not a proper request";
-		return json_encode($this->data);
-	}
-
-	//--------------------------------------------------------------------
-	/**
-		*
-		*/
-	public function remove()
-	{
-		if ($this->request->isAjax()) {
-			// Check if questions and option deleted
-			// a better way to add database constrains
-
-		}
-	}
-/********************************************************
-*
-*			To Be tested and added
-*
-********************************************************/
-// TODO: test and edit
-
-
+	// Respond with fail status
+	$this->data['code'] 	= 110;
+	$this->data['status'] = 'Its not ajax request.';
+	return json_encode($this->data);
+}
 //--------------------------------------------------------------------
 /**
 	*
 	*/
-	public function validateToken($token = null)
-	{
-			if (is_null($token) || !preg_match('/^[0-9A-F]{40}$/i', $token)) {
-				echo 'Not valid';
-			}else {
-				echo 'valid';
+public function detachQ()
+{
+	if ($this->request->isAjax()) {
+
+		if ($this->request->getMethod() === 'post') {
+			$this->qModel->where('id', $this->request->getPost('gId'))->where('user_id', session('user.user_id'))->delete();
+				if($this->qModel->affectedRows() !== 0){
+					$this->data['code'] = 100;
+					$this->data['status'] = "Record deleted.";
+					return json_encode($this->data);
 			}
+		}
 	}
+	// Respond with fail status
+	$this->data['code'] 	= 110;
+	$this->data['status'] = 'Cannot process your request.';
+	return json_encode($this->data);
+
+}
 //--------------------------------------------------------------------
 /**
 	*
 	*/
-	public function initiateToken()
-	{
-		$token = sha1(uniqid('', true));
-		echo $token;
+public function removeS()
+{
+	if ($this->request->isAjax()) {
+
+		if ($this->request->getMethod() === 'post') {
+			$this->qModel->where('id', $this->request->getPost('sId'))->where('user_id', session('user.user_id'))->delete();
+				if($this->sModel->affectedRows() !== 0){
+					$this->data['code'] = 100;
+					$this->data['status'] = "Survey deleted.";
+					return json_encode($this->data);
+			}
+		}
 	}
+	// Respond with fail status
+	$this->data['code'] 	= 110;
+	$this->data['status'] = 'Cannot process your request.';
+	return json_encode($this->data);
+}
+//--------------------------------------------------------------------
+/**
+	*
+	*/
 
 }
