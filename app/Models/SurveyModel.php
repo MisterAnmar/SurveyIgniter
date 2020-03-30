@@ -19,7 +19,7 @@ class SurveyModel extends Model
 
         protected $validationRules    = [
               'title'       => 'required|alpha_numeric_punct|min_length[3]|max_length[150]',
-              'description' => 'required|alpha_numeric_punct|min_length[3]|max_length[250]',
+              'description' => 'permit_empty|alpha_numeric_punct|max_length[250]',
               'user_id'     => 'required|is_natural_no_zero'
         ];
         protected $validationMessages = [];

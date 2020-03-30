@@ -3,23 +3,32 @@
 
 	<section id="content">
 	  <main>
+			<div id="survey">
+				<?php
+				if (isset($survey)) {
+					echo '<h2>'.$survey['title'].'</h2>';
+					echo '<p>'.$survey['description'].'</p>';
+				}
+				 ?>
+			</div>
+			<nav>
+				<?php
+				echo '<a href="'.base_url('survey/revamp/'.$survey['id']).'">Edit</a>';
+				echo '<a href="'.base_url('survey/affix/'.$survey['id']).'">Add Questions</a>';
+				echo '<a href="'.base_url('survey/removesurvey/'.$survey['id']).'">Delete</a>';
+				 ?>
+			</nav>
+				<hr>
 			<?php
-			if (isset($sur)) {
-				echo '<h2>'.$sur['title'].'</h2>';
-				echo '<a href="'.base_url('survey/revamp/'.$sur['id']).'">Edit</a>
-							<a href="'.base_url('survey/affix/'.$sur['id']).'">Add Questions</a>';
-				echo '<br>';
-				echo '<p>'.$sur['description'].'</p>';
-			}
 
-			if (isset($ques) && is_array($ques)) {
-				echo '<hr>';
+			if (isset($questions) && !empty($questions) && is_array($questions)) {
+
 				$i = 1;
-					foreach ($ques as $que) {
+					foreach ($questions as $que) {
 						echo '<div class="question-block">';
-						echo '<button type="button" value="'.$sur['id'].','.$que['id'].'" class="question-remove">Delete</button>';
+						echo '<button type="button" style="float:right;" value="'.$que['id'].'" class="question-remove">Delete</button>';
 						echo '<div class="question">';
-						echo '<p>'.$i.' - '.$que['question'].'</p>';
+						echo '<p>'.$i.' - '.$que['content'].'</p>';
 						echo '</div>';
 						if ($que['type'] == 'textarea') {
 								echo '<div class="options">';
@@ -28,12 +37,14 @@
 						}	else {
 								echo '<div class="options">';
 								echo '<ol type="a">';
-							foreach($opts as $opt){
+							foreach($options as $opt){
+								if ($opt['question_id'] == $que['id'] ) {
 									//echo '<input name="question_'.$que['id'].'" type="radio" id="q'.$que['id'].'_o'.$opt['id'].'" />';
 									echo '<li>';
 									echo $opt['option'];
 									echo '</li>';
-									}
+								}
+							}
 								echo '</ol>';
 								echo '</div>';
 						}
@@ -54,23 +65,27 @@ $(function(){
 
 	$(".question-remove").on("click", function(event){
 		event.preventDefault();
-		var record = $(this).val();
+		var qid = $(this).val();
+		$(this).closest('.question-block').remove();
 		if (window.confirm("Do you really want to delete this question?")) {
-			var formData = {record: record };
-
-			$.post( "<?=base_url('survey/detach')?>", formData, function(result) {
-			}, "json")
-			.done(function(result){
-				if (result.status) {
-					alert(result.message);
-					$(this).closest('.question-block').remove();
-				}else {
-					alert(result.message + " - " + result.errors);
-				}
-			})
-			.fail(function(result) {
-				console.log("fail");
+			//var menuId = $( "ul.nav" ).first().attr( "id" );
+			var request = $.ajax({
+			  url: "<?=base_url('survey/detach')?>",
+			  method: "post",
+			  data: { id : qid }
 			});
+			request.done(function( msg ) {
+				if (msg.code == 100) {
+					alert(msg.status);
+				}else{
+					alert( "Request failed: " + msg.status );
+				}
+			});
+
+			request.fail(function( jqXHR, textStatus ) {
+			  alert( "Request failed: " + textStatus );
+			});
+
 		}else{
 			return;
 		}

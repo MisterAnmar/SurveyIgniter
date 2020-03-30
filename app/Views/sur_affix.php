@@ -4,12 +4,12 @@
 	<section id="content">
 	  <main>
 			<div class="">
-				<h2><?=$sur['title']?></h2>
-				<p><?=$sur['description']?></p>
+				<h2><?=$survey['title']?></h2>
+				<p><?=$survey['description']?></p>
 			</div>
 			<div class="questions">
 				<?php
-				echo $count;
+				echo "No of Question(s):".$count;
 				?>
 			</div>
 			<div id="sur-form-questions">
@@ -20,10 +20,10 @@
 				</select>
 			</div>
 			<form id="question-form" action="" method="post" style="display:none;">
-				<input type="hidden" name="surID" value="<?=$sur['id']?>">
+				<input type="hidden" name="sid" value="<?=$survey['id']?>">
 
 			<div id="question-wrapper">
-				<input type="text" name="question" placeholder="Write your question" value="">
+				<input type="text" name="content" placeholder="Write your question" value="">
 			</div>
 			<div id="option-add">
 				<button type="button" id="add-option" name="add-option">Add Optione</button>
@@ -47,7 +47,7 @@ $("#add-question-type").on("change", function(event){
 	$(this).prop('disabled', true);
 	let qType = $(this).val();
 	$("#question-form").show();
-		//$("#question-form").append('<input type="hidden" name="questionType" value="checkbox">');
+	
 	if (qType == 'checkbox') {
 		$("#question-form").append('<input type="hidden" name="questionType" value="checkbox">');
 	}else if (qType == 'radio') {

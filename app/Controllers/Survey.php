@@ -151,12 +151,12 @@ private $oModel;
 	* Get ajax calls and process adding questions and options to the DB.
 	* Code: 100 = OK, 110 = fail
 	*/
-public function affixQ()
+public function affixq()
 {
-	if ($this->request->isAjax() && $this->request->getMethod() === 'post') {
+	if ($this->request->isAjax() && $this->request->getMethod() === 'post' && $this->request->getPost('sid', FILTER_VALIDATE_INT)) {
 
 			//$data['formD'] = $this->request->getPost();
-			$sId = $this->request->getPost('sId');
+			$sId = $this->request->getPost('sid', FILTER_VALIDATE_INT);
 			// Check integrity
 			if (!$this->sModel->where('user_id', session('user.user_id'))->where('id', $sId)->first()) {
 				$this->data['code'] = 110;
@@ -211,59 +211,72 @@ public function affixQ()
 /**
 	*
 	*/
-public function detachQ()
+public function detach()
 {
-	if ($this->request->isAjax()) {
+	if ($this->request->isAjax() && $this->request->getMethod() === 'post' && $this->request->getVar('id', FILTER_VALIDATE_INT)) {
 
-		if ($this->request->getMethod() === 'post') {
-			if ($this->qModel->where('id', $this->request->getPost('gId'))->where('user_id', session('user.user_id'))->delete()) {
+			if ($this->qModel->where('id', $this->request->getVar('id'))->where('user_id', session('user.user_id'))->first()) {
+
+				$this->qModel->delete($this->request->getVar('id'));
+
 				if($this->qModel->affectedRows() !== 0){
 					$this->data['code'] = 100;
 					$this->data['status'] = "Record deleted.";
-					return json_encode($this->data);
-				}
-				$this->data['code'] 	= 110;
-				$this->data['errors'] = $this->qModel->errors();
-				$this->data['status'] = 'affected Rows problem';
-				return json_encode($this->data);
-			}
 
-			$this->data['code'] 	= 110;
-			$this->data['errors'] = $this->qModel->errors();
-			$this->data['status'] = 'Model problem';
-			return json_encode($this->data);
-		}
-		$this->data['code'] 	= 110;
-		$this->data['status'] = 'Post issue.';
-		return json_encode($this->data);
+					return $this->response->setJSON($this->data);
+					//return json_encode($this->data);
+				}
+			}
 	}
 	// Respond with fail status
 	$this->data['code'] 	= 110;
 	$this->data['status'] = 'Cannot process your request.';
 	return json_encode($this->data);
-
 }
 //--------------------------------------------------------------------
 /**
 	*
 	*/
-public function removeS()
+public function removes()
 {
-	if ($this->request->isAjax()) {
+	if ($this->request->isAjax() && $this->request->getMethod() === 'post' && $this->request->getVar('id', FILTER_VALIDATE_INT)) {
 
-		if ($this->request->getMethod() === 'post') {
-			$this->qModel->where('id', $this->request->getPost('sId'))->where('user_id', session('user.user_id'))->delete();
+		if ($this->sModel->where('id', $this->request->getVar('id'))->where('user_id', session('user.user_id'))->first()) {
+
+				$this->sModel->delete($this->request->getVar('id'));
+
 				if($this->sModel->affectedRows() !== 0){
 					$this->data['code'] = 100;
-					$this->data['status'] = "Survey deleted.";
+					$this->data['status'] = "Survey and its componenets deleted.";
 					return json_encode($this->data);
-			}
+				}
 		}
 	}
 	// Respond with fail status
 	$this->data['code'] 	= 110;
 	$this->data['status'] = 'Cannot process your request.';
 	return json_encode($this->data);
+}
+//--------------------------------------------------------------------
+/**
+	*
+	*/
+public function removesurvey(int $sid = null)
+{
+	if (is_null($sid)) {
+		die();
+	}
+
+	if ($this->sModel->where('id', $sid)->where('user_id', session('user.user_id'))->first()) {
+
+			$this->sModel->delete($sid);
+
+			if($this->sModel->affectedRows() !== 0){
+				return redirect()->to('/');
+			}
+	}
+	echo 'cant process your request';
+	die();
 }
 //--------------------------------------------------------------------
 /**
