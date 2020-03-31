@@ -3,7 +3,11 @@
 
 	<section id="content">
 	  <main>
-				<h2>PageTitle</h2>
+				<h2>Survey</h2>
+			<hr>
+			<nav>
+				<a href="<?=base_url('contact')?>">Contacts</a>
+			</nav>
 			<hr>
 			<nav>
 				<a href="<?=base_url('survey/create')?>">New Survey</a>

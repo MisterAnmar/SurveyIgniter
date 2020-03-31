@@ -6,6 +6,7 @@ use CodeIgniter\Exceptions\PageNotFoundException;
 use App\Models\SurveyModel;
 use App\Models\QuestionModel;
 use App\Models\OptionModel;
+use App\Models\ParticipantModel;
 
 	/*
 	*  Notes for reader
@@ -24,6 +25,7 @@ public $data = [];
 private $sModel;
 private $qModel;
 private $oModel;
+private $pModel;
 
 	public function __construct()
 	{
@@ -31,6 +33,7 @@ private $oModel;
 		$this->sModel = new SurveyModel();
 		$this->qModel = new QuestionModel();
 		$this->oModel = new OptionModel();
+		$this->pModel = new ParticipantModel();
 
 			// load sample session for testing purposes
 			$userData = [
@@ -275,12 +278,84 @@ public function removesurvey(int $sid = null)
 				return redirect()->to('/');
 			}
 	}
-	echo 'cant process your request';
+	echo 'cannot process your request';
 	die();
 }
 //--------------------------------------------------------------------
 /**
 	*
 	*/
+public function publish(int $id = null)
+{
+	if (!is_null($id)) {
+			// Check integrity
+			if ($this->sModel->where('id', $id)->where('active', 0)->where('user_id', session('user.user_id'))->first()) {
+				$this->data['queCount'] = $this->qModel->where('survey_id', $id)->countAll();
+				$this->data['survey'] 	= $this->sModel->find($id);
+				return view('sur_publish', $this->data);
+			}
 
+
+			echo 'Its active.';
+			return null;
+	}
+
+	if (!$this->request->getMethod() === 'post') {
+	 return null;
+	}
+
+	if (!$this->request->getPost('id', FILTER_VALIDATE_INT)) {
+	return null;
+	}
+
+	$saveData = [
+		'id' => $this->request->getPost('id'),
+		'active' => 1,
+		'start_at' => $this->request->getPost('start_at'),
+		'end_at' => $this->request->getPost('end_at'),
+		'link' => $this->initiateToken(),
+	];
+
+	if(!$this->sModel->where('user_id', session('user.user_id'))->save($saveData))
+	{
+		return null;
+	}
+$aurvey = $this->sModel->where('id', $saveData['id'])->where('user_id', session('user.user_id'))->first();
+	$part = [
+		'token' => $saveData['link'],
+		'survey_id' => $saveData['id'],
+		'title'	=> $survey['title'],
+		'takers' => 0,
+		'finished' => 0,
+	];
+
+	if (!$this->pModel->save($part)) {
+		// Need to do reverse for previuse query
+		var_dump($this->pModel->errors());
+
+		return null;
+			throw new PageNotFoundException("Cannot Process your Request");
+	}
+
+	return redirect()->to('/survey/fetch/'.$this->request->getPost('id'));
+
+}
+//--------------------------------------------------------------------
+/**
+	*
+	*/
+public function unpublish(int $id = null)
+{
+
+
+
+}
+
+private function initiateToken()
+{
+	$token = sha1(uniqid('', true));
+	return $token;
+}
+
+//--------------------------------------------------------------------
 }

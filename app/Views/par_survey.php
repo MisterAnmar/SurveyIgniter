@@ -11,41 +11,30 @@
 				}
 				 ?>
 			</div>
-			<nav>
-				<?php
-					echo '<a href="'.base_url('survey/publish/'.$survey['id']).'">Publish</a>';
-					echo '<a href="'.base_url('survey/revamp/'.$survey['id']).'">Edit</a>';
-					echo '<a href="'.base_url('survey/affix/'.$survey['id']).'">Add Questions</a>';
-					echo '<a href="'.base_url('survey/removesurvey/'.$survey['id']).'">Delete</a>';
-				 ?>
-			</nav>
 			<hr>
-			<?php if (!empty($survey['link'])): ?>
-				<input type="text" id="link" name="link" value="<?=base_url('participant/serve/'.$survey['link'])?>" readonly><br><br>
-			<?php endif; ?>
-				<hr>
+			<form class="" action="" method="post">
+				<input type="hidden" name="id" value="<?=$survey['id']?>">
 			<?php
-
 			if (isset($questions) && !empty($questions) && is_array($questions)) {
 
 				$i = 1;
 					foreach ($questions as $que) {
 						echo '<div class="question-block">';
-						echo '<button type="button" style="float:right;" value="'.$que['id'].'" class="question-remove">Delete</button>';
+
 						echo '<div class="question">';
 						echo '<p>'.$i.' - '.$que['content'].'</p>';
 						echo '</div>';
 						if ($que['type'] == 'textarea') {
 								echo '<div class="options">';
-								echo '<p>Text Box</p>';
+								echo '<textarea name="'.$survey['id'].'_'.$que['id'].'" id="" cols="30" rows="10"></textarea>';
 								echo '</div>';
 						}	else {
 								echo '<div class="options">';
 								echo '<ol type="a">';
 							foreach($options as $opt){
 								if ($opt['question_id'] == $que['id'] ) {
-									//echo '<input name="question_'.$que['id'].'" type="radio" id="q'.$que['id'].'_o'.$opt['id'].'" />';
 									echo '<li>';
+									echo '<input name="question_'.$que['id'].'" type="'.$que['type'].'" id="q'.$que['id'].'_o'.$opt['id'].'" />';
 									echo $opt['option'];
 									echo '</li>';
 								}
@@ -56,10 +45,10 @@
 						$i++;
 						echo '</div>';
 					}
-			}else {
-				echo 'No Questions Yet.';
 			}
 			?>
+			<button type="submit" name="button">Finish</button>
+			</form>
 	  </main>
 	</section>
 
