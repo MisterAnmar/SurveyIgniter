@@ -2,15 +2,15 @@
 
 use CodeIgniter\Model;
 
-class OptionModel extends Model
+class ParticipantModel extends Model
 {
-        protected $table      = 'option';
+        protected $table      = 'participant';
         protected $primaryKey = 'id';
 
         protected $returnType = 'array';
         protected $useSoftDeletes = false;
 
-        protected $allowedFields = ['user_id', 'survey_id', 'question_id', 'option'];
+        protected $allowedFields = ['survey_id', 'title', 'takers', 'finished'];
 
         protected $useTimestamps = true;
         protected $createdField  = 'created_at';
@@ -18,11 +18,22 @@ class OptionModel extends Model
         protected $deletedField  = 'deleted_at';
 
         protected $validationRules    = [
-              'user_id'     => 'required|is_natural_no_zero',
-              'survey_id'   => 'required|is_natural_no_zero',
-              'question_id' => 'required|is_natural_no_zero',
-              'option'      => 'required|min_length[3]'
+              'survey_id'   => 'required|numeric',
+              'title'       => 'required|alpha_numeric_punct|min_length[3]|max_length[150]',
+              'takers'      => 'required|numeric',
+              'finished'    => 'required|numeric',
+
         ];
         protected $validationMessages = [];
         protected $skipValidation     = false;
+
+
+public function updateSur()
+{
+
+}
+
+
+
+
 }

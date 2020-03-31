@@ -10,7 +10,7 @@ class QuestionModel extends Model
         protected $returnType = 'array';
         protected $useSoftDeletes = false;
 
-        protected $allowedFields = ['user_id', 'survey_id', 'question', 'type'];
+        protected $allowedFields = ['user_id', 'survey_id', 'content', 'type'];
 
         protected $useTimestamps = true;
         protected $createdField  = 'created_at';
@@ -20,9 +20,18 @@ class QuestionModel extends Model
         protected $validationRules    = [
               'user_id'     => 'required|is_natural_no_zero',
               'survey_id'   => 'required|is_natural_no_zero',
-              'question'    => 'required|alpha_numeric_punct|min_length[3]',
-              'type'        => 'required|in_list[textarea,radio,select]'
+              'content'    => 'required|alpha_numeric_punct|min_length[3]',
+              'type'        => 'required|in_list[textarea,radio,checkbox]'
         ];
         protected $validationMessages = [];
         protected $skipValidation     = false;
+
+
+        public function getCount($qID)
+        {
+          $this->builder->where('id', $qID);
+          $this->builder->from('my_table');
+
+          return $builder->countAllResults();
+        }
 }
