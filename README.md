@@ -2,10 +2,12 @@
 Simple yet adequate :-) survey app using Codeigniter 4.
 
 
-# This Release Branch 
+# This Release Branch
 
 This release branch is the planned coming release v0.3.5-Alpha
 Please refer to Issues section and project section for details
+
+Add feature request or suggestions in the issues section
 
 
 # Objective:
@@ -14,7 +16,7 @@ Please refer to Issues section and project section for details
 - Using this survey app to learn more about the new awesome codeigniter4.0.2.
 - Trying to follow KIS Method KEEP IT SIMPLE yet follow CodeIgniter4 best practice
 - Learn more about Github and related tools (Editors, Command line, versioning, .etc)
-- You are welcome to join 
+- You are welcome to join
 - Do comment on the code and on how to improve it (Any suggestions is highly appreciated).
 
 
@@ -30,7 +32,7 @@ Check out the [project](https://github.com/anmar-dev/SurveyIgniter/projects) sec
 **Phase One:**
 - **DONE** basic prototype survey system with minimum features
 - Complete Database design for questions and answers
-- Integrate JQuery or Vanilla Javascript to handle adding questions and answers 
+- Integrate JQuery or Vanilla Javascript to handle adding questions and answers
 - Complete adding form for adding questions and answers for each survey (Require Previuse)
 - Unit testing and integrated testing (JS sometimes difficult to trace)
 - can be version 0.3.0
@@ -56,7 +58,7 @@ Check out the [project](https://github.com/anmar-dev/SurveyIgniter/projects) sec
 - can be version 0.7.0
 
 **Phase n:**
-- start adding the little things, small features, little enhancement (Which never ends). 
+- start adding the little things, small features, little enhancement (Which never ends).
 ------
 
 I would love to hear your comments on improvment. Im just learning.
@@ -65,4 +67,3 @@ I would love to hear your comments on improvment. Im just learning.
 - **SurveyIgniter** uses [Marks CSS Framework](https://mblode.github.io/marx/) a classless css framework by [Matthew Blode](https://github.com/mblode) which is great for prototyping when you want to focus on the system backend yet have some how presentable UI wih out worring much about the UI design from the start.
 - **SurveyIgniter** uses JQuery 3.4 as the main Client side scripting library (So far). Suggestions are welcomed.
 - **Inspired** by the tutorial of [KhoPhi](https://blog.khophi.co/10-days-laravel-5-laravel-survey-app/)
-

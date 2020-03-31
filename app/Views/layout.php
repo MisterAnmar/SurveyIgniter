@@ -14,6 +14,30 @@
 			font-family: NewsGothicBT-Light,Helvetica,Arial,sans-serif;
 			color: #000;
 		}
+
+		.visible{
+			border-bottom: 1px solid #ccc;
+		}
+
+		.question_container{
+			position: relative;
+			border:1px solid #cccccc;
+			padding: 1.5em;
+			padding-top: 2.4em;
+			margin-bottom: 1em;
+			margin-top: 1em;
+		}
+		.remove_field{
+			padding: 0.5em;
+			position:absolute;
+		  right:0.2em;
+		  top:0.2em;
+		}
+		.question_save{
+			position:absolute;
+		  right:1.5em;
+		  bottom:1.5em;
+		}
 	</style>
 </head>
 <body>
